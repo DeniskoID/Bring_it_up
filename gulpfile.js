@@ -5,8 +5,8 @@ const webpack = require('webpack-stream');
 const browsersync = require('browser-sync');
 
 // Ссылка на мою папку на опенсервере
-const dist = 'C:/ospanel/domains/Bringitup';
-// const dist = "./dist/";
+// const dist = 'C:/ospanel/domains/Bringitup';
+const dist = './dist/';
 
 gulp.task('copy-html', () => {
   return gulp

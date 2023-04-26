@@ -1,11 +1,13 @@
 export default class Difference {
   constructor(oldOfficer, newOfficer, items) {
-    this.oldOfficer = document.querySelector(oldOfficer);
-    this.newOfficer = document.querySelector(newOfficer);
-    this.oldItems = this.oldOfficer.querySelectorAll(items);
-    this.newItems = this.newOfficer.querySelectorAll(items);
-    this.oldCounter = 0;
-    this.newCounter = 0;
+    try {
+      this.oldOfficer = document.querySelector(oldOfficer);
+      this.newOfficer = document.querySelector(newOfficer);
+      this.oldItems = this.oldOfficer.querySelectorAll(items);
+      this.newItems = this.newOfficer.querySelectorAll(items);
+      this.oldCounter = 0;
+      this.newCounter = 0;
+    } catch (e) {}
   }
 
   handlePlusClick(counter, items) {
@@ -33,18 +35,22 @@ export default class Difference {
   }
 
   hideItems() {
-    const hideFunc = (item, i, arr) => {
-      if (i !== arr.length - 1) {
-        item.style.display = 'none';
-      }
-    };
+    try {
+      const hideFunc = (item, i, arr) => {
+        if (i !== arr.length - 1) {
+          item.style.display = 'none';
+        }
+      };
 
-    this.oldItems.forEach(hideFunc);
-    this.newItems.forEach(hideFunc);
+      this.oldItems.forEach(hideFunc);
+      this.newItems.forEach(hideFunc);
+    } catch (e) {}
   }
 
   init() {
-    this.hideItems();
-    this.bindTriggers();
+    try {
+      this.hideItems();
+      this.bindTriggers();
+    } catch (e) {}
   }
 }

@@ -4,14 +4,28 @@ export default class VideoPlayer {
     this.overlay = document.querySelector(overlay);
     this.close = this.overlay.querySelector('.close');
     this.player = null;
+    this.onPlayerStatechange = this.onPlayerStatechange.bind(this);
   }
 
   bindTriggers() {
-    this.btns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const path = btn.getAttribute('data-url');
+    this.btns.forEach((btn, i) => {
+      try {
+        const blockedElem = btn.closest('.module__video-item').nextElementSibling;
+        if (i % 2 == 0) {
+          blockedElem.setAttribute('data-disabled', 'true');
+        }
+      } catch (e) {}
 
-        this.openPlayer(path);
+      btn.addEventListener('click', () => {
+        if (
+          !btn.closest('.module__video-item') ||
+          btn.closest('.module__video-item').getAttribute('data-disabled') !== 'true'
+        ) {
+          this.activeBtn = btn;
+          const path = btn.getAttribute('data-url');
+
+          this.openPlayer(path);
+        }
       });
     });
   }
@@ -43,12 +57,35 @@ export default class VideoPlayer {
         height: '100%',
         width: '100%',
         videoId: url,
+        events: {
+          onStateChange: this.onPlayerStatechange,
+        },
       });
     } else {
       setTimeout(() => {
         this.createPlayer(url);
       }, 100);
     }
+  }
+
+  onPlayerStatechange(state) {
+    try {
+      const blockedElem = this.activeBtn.closest('.module__video-item').nextElementSibling;
+      const playBtn = this.activeBtn.querySelector('svg').cloneNode(true);
+
+      if (state.data === 0) {
+        if (blockedElem.querySelector('.play__circle').classList.contains('closed')) {
+          blockedElem.querySelector('.play__circle').classList.remove('closed');
+          blockedElem.querySelector('svg').remove();
+          blockedElem.querySelector('.play__circle').appendChild(playBtn);
+          blockedElem.querySelector('.play__text').textContent = 'play video';
+          blockedElem.querySelector('.play__text').textList = 'attention';
+          blockedElem.style.opacity = 1;
+          blockedElem.style.filter = 'none';
+          blockedElem.setAttribute('data-disabled', 'false');
+        }
+      }
+    } catch (e) {}
   }
 
   init() {
